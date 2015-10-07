@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'io.ratpack:ratpack-gradle:1.0.0'
+    }
+}
+
+allprojects {
+    group = 'org.10ne'
+    version = '1-SNAPSHOT'
+    apply plugin: 'idea'
+    repositories {
+        jcenter()
+    }
+}
+
+project(':server') {
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: "io.ratpack.ratpack-groovy"
+
+    sourceCompatibility = 1.8
+
+    dependencies {
+        testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    }
+}
+
+idea {
+    project {
+        //use JDK 1.8 in idea
+        jdkName '1.8'
+        languageLevel '1.8'
+        ipr {
+            withXml { provider ->
+                def node = provider.asNode()
+                //configure git support for the project in idea
+                node.component.find { it.'@name' == 'VcsDirectoryMappings' }?.mapping[0].'@vcs' = 'Git'
+            }
+        }
+    }
+}
+
+task stage {
+    dependsOn ':server:installDist'
+}
