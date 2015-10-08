@@ -42,5 +42,5 @@ idea {
 }
 
 task stage {
-    dependsOn ':server:installDist'
+    dependsOn ':installDist'
 }
