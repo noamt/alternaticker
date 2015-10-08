@@ -1,0 +1,1 @@
+web: export RATPACK_OPTS="-Dratpack.port=$PORT" && build/install/alternaticker/bin/alternaticker build/install/alternaticker/app/Ratpack.groovy
