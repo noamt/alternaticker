@@ -24,3 +24,17 @@
 .numerical-stats-text {
     font-family: futuraExtended;
 }
+
+table {
+    margin: 0 auto;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+.country-stats {
+    padding-top: 20px;
+    width:100%;
+    height:100%;
+}

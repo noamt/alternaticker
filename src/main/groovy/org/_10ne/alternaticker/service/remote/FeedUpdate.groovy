@@ -38,7 +38,8 @@ class FeedUpdate implements Runnable {
             def id = jsonEntry.id.toLong()
             def countryCode = jsonEntry.benchmarkRunModel.countryCode
             def overallScore = jsonEntry.benchmarkRunModel.overallScore
-            new FeedEntry(id: id, countryCode: countryCode, overallScore: overallScore)
+            def testName = jsonEntry.benchmarkRunModel.testName
+            new FeedEntry(id: id, countryCode: countryCode, overallScore: overallScore, testName: testName)
         }
     }
 

@@ -1,7 +1,7 @@
 package org._10ne.alternaticker.service
 
 import groovy.util.logging.Slf4j
-import org._10ne.alternaticker.model.CountryAverage
+import org._10ne.alternaticker.model.TestAverage
 import org._10ne.alternaticker.model.FeedEntry
 import org._10ne.alternaticker.model.NumericalStats
 
@@ -11,48 +11,71 @@ import org._10ne.alternaticker.model.NumericalStats
 @Slf4j
 class DataManagementService {
 
-    private Map<String, CountryAverage> countryAveragesCache = new HashMap<>()
+    private Map<String, Map<String, TestAverage>> testAveragesCache = new HashMap<>()
 
     void submitNewEntries(List<FeedEntry> feedEntries) {
         log.info "Submitting ${feedEntries.size()} new entries"
         feedEntries.each { FeedEntry feedEntry ->
-            CountryAverage countryAverage = countryAveragesCache.get(feedEntry.countryCode)
+            Map<String, TestAverage> testAverages = testAveragesCache.get(feedEntry.countryCode)
 
-            if (countryAverage) {
-                updateExistingCountryAverage(feedEntry, countryAverage)
+            if (testAverages) {
+                updateExistingCountryAverage(feedEntry, testAverages)
             } else {
                 createNewCountryAverage(feedEntry)
             }
         }
     }
 
-    Map<String, CountryAverage> getCountryAverages() {
+    Map<String, Map<String, TestAverage>> getAverages() {
         //Clone the cache so that the client gets an absolute snapshot
-        countryAveragesCache.clone()
+        testAveragesCache.clone()
+    }
+
+    Map<String, TestAverage> getCountryAverages(String country) {
+        if (!testAveragesCache.containsKey(country)) {
+            return [:]
+        }
+        testAveragesCache.get(country).clone()
     }
 
     NumericalStats getNumericalStats() {
-        if (countryAveragesCache.isEmpty()) {
+        if (testAveragesCache.isEmpty()) {
             return new NumericalStats(countries: 0, scoresSubmitted: 0)
         }
-        def countries = countryAveragesCache.keySet().size()
-        def scoresSubmitted = countryAveragesCache.values().sum { it.scoresSubmitted }
+        def countries = testAveragesCache.keySet().size()
+        def scoresSubmitted = testAveragesCache.values().sum { it.values().sum { it.scoresSubmitted} }
         new NumericalStats(countries: countries, scoresSubmitted: scoresSubmitted)
     }
 
-    private void updateExistingCountryAverage(FeedEntry feedEntry, CountryAverage countryAverage) {
+    private void updateExistingCountryAverage(FeedEntry feedEntry, Map<String, TestAverage> testAverages) {
         String countryCode = feedEntry.countryCode
         long overallScore = feedEntry.overallScore
-        countryAverage.submitNewScore(overallScore)
-        log.info("Update country average for $countryCode with score $overallScore and new average ${countryAverage.currentAverage}")
+        String testName = feedEntry.testName
+
+        def testAverage = testAverages.get(testName)
+        if (testAverage) {
+            testAverage.submitNewScore(overallScore)
+        } else {
+            testAverage = new TestAverage()
+            testAverage.submitNewScore(overallScore)
+            testAverages.put(testName, testAverage)
+        }
+
+        log.info("Update ${testName} test average for $countryCode with score $overallScore and new average ${testAverage.currentAverage}")
     }
 
     private void createNewCountryAverage(FeedEntry feedEntry) {
         String countryCode = feedEntry.countryCode
         long overallScore = feedEntry.overallScore
-        CountryAverage countryAverage = new CountryAverage()
-        countryAverage.submitNewScore(overallScore)
-        countryAveragesCache.put(countryCode, countryAverage)
-        log.info("Creating new country average for $countryCode with score $overallScore")
+        String testName = feedEntry.testName
+
+        def testAverages = [:]
+
+        TestAverage testAverage = new TestAverage()
+        testAverage.submitNewScore(overallScore)
+        testAverages.put(testName, testAverage)
+
+        testAveragesCache.put(countryCode, testAverages)
+        log.info("Creating new ${testName} test average for $countryCode with score $overallScore")
     }
 }

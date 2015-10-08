@@ -1,7 +1,6 @@
 package org._10ne.alternaticker.model
 
 import spock.lang.Specification
-import spock.lang.Stepwise
 
 /**
  * @author Noam Y. Tenne
@@ -10,7 +9,7 @@ class CountryAverageSpec extends Specification {
 
     def 'Submit and initial score that should be set rather than averaged'() {
         given:
-        def average = new CountryAverage()
+        def average = new TestAverage()
 
         when:
         average.submitNewScore(200)
@@ -22,7 +21,7 @@ class CountryAverageSpec extends Specification {
 
     def 'Submit a new score to an existing average that should be incrementally updated'() {
         given:
-        def average = new CountryAverage()
+        def average = new TestAverage()
         average.submitNewScore(200)
         average.submitNewScore(100)
 

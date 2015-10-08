@@ -8,4 +8,5 @@ class FeedEntry {
     long id
     String countryCode
     long overallScore
+    String testName
 }

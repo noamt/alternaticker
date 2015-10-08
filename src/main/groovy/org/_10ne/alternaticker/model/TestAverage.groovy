@@ -6,7 +6,7 @@ import groovy.util.logging.Slf4j
  * @author Noam Y. Tenne
  */
 @Slf4j
-class CountryAverage {
+class TestAverage {
 
     private long scoresSubmitted
     private long currentAverage
@@ -18,7 +18,6 @@ class CountryAverage {
             return
         }
 
-
         def numberOfScoresBeforeNewSubmission = scoresSubmitted - 1
         currentAverage = ((currentAverage * numberOfScoresBeforeNewSubmission) + score) / scoresSubmitted
     }
@@ -29,6 +28,6 @@ class CountryAverage {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        new CountryAverage(scoresSubmitted: scoresSubmitted, currentAverage: currentAverage)
+        new TestAverage(scoresSubmitted: scoresSubmitted, currentAverage: currentAverage)
     }
 }

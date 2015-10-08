@@ -13,12 +13,14 @@
     <script src="js/alternaticker.js" type="text/javascript"></script>
 
     <script lang="javascript">
+        window.selectedCountry = null;
+
         AmCharts.ready(function () {
             var map = new AmCharts.AmMap();
             map.pathToImages = "ammap/images/";
 
             map.dataLoader = {
-                url: "feed",
+                url: "globalFeed",
                 format: "json",
                 reload: 5
             };
@@ -28,26 +30,32 @@
                 selectedColor: "#CC0000"
             };
 
-            map.smallMap = new AmCharts.SmallMap();
             responsive = {
                 enabled: true
             };
 
-            map.balloonLabelFunction = function(mapObject, ammap) {
-                mapObject.balloonText = mapObject.title + ": " + mapObject.value;
+            map.balloonLabelFunction = function (mapObject, ammap) {
+                mapObject.balloonText = mapObject.title + ". Number Of Tests: " + mapObject.value;
                 return mapObject.balloonText;
             };
 
-            map.validateData();
+            map.addListener("dataUpdated", function (params) {
+                updateNumericalStats();
+                updateCountryStats(selectedCountry);
+            });
+
+            map.addListener("selectedObjectChanged", function (params) {
+                var chart = params.chart;
+                var selected = chart.selectedObject;
+                var selectedId = selected.id;
+                selectedCountry = selectedId;
+                updateCountryStats(selectedCountry);
+            });
+
             map.write("map");
         });
     </script>
     <script lang="javascript">
-        setInterval(getNumericalStats, 5000);
-
-        $(function() {
-            getNumericalStats();
-        });
     </script>
 </head>
 <body>
@@ -56,5 +64,6 @@
 <div id="header" class="header-text"><h1>The AlternaTicker</h1></div>
 <div id="map" class="map-location"></div>
 <div id="numericalstats" class="numerical-stats-location numerical-stats-text"></div>
+<div id="countryStats" class="country-stats"> </div>
 </body>
 </html>
