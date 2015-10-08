@@ -2,11 +2,12 @@ package org._10ne.alternaticker.handlers
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import groovy.json.JsonBuilder
 import org._10ne.alternaticker.model.TestAverage
 import org._10ne.alternaticker.service.DataManagementService
 import ratpack.groovy.handling.GroovyContext
 import ratpack.groovy.handling.GroovyHandler
+
+import static ratpack.jackson.Jackson.json
 
 /**
  * @author Noam Y. Tenne
@@ -31,7 +32,7 @@ class GlobalFeedHandler extends GroovyHandler {
 
                 data.map = 'worldLow'
                 data.areas = areas
-                context.response.send('application/json', new JsonBuilder(data).toString())
+                context.render(json(data))
             }
         }
     }
