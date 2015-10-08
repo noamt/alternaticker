@@ -2,11 +2,12 @@ package org._10ne.alternaticker.handlers
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import groovy.json.JsonBuilder
 import org._10ne.alternaticker.model.TestAverage
 import org._10ne.alternaticker.service.DataManagementService
 import ratpack.groovy.handling.GroovyContext
 import ratpack.groovy.handling.GroovyHandler
+
+import static ratpack.jackson.Jackson.json
 
 /**
  * @author Noam Y. Tenne
@@ -28,8 +29,7 @@ class CountryFeedHandler extends GroovyHandler {
                     [name: testName, average: testAverage.currentAverage]
                 }
                 data.sort(true){ it.average * -1}
-
-                context.response.send('application/json', new JsonBuilder(data).toString())
+                context.render(json(data))
             }
         }
     }

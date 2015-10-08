@@ -1,8 +1,8 @@
 package org._10ne.alternaticker.handlers
 
-import groovy.json.JsonSlurper
 import org._10ne.alternaticker.model.TestAverage
 import org._10ne.alternaticker.service.DataManagementService
+import ratpack.jackson.JsonRender
 import spock.lang.Specification
 
 import static ratpack.groovy.test.handling.GroovyRequestFixture.handle
@@ -30,7 +30,7 @@ class CountryFeedHandlerSpec extends Specification {
              wind : new TestAverage(scoresSubmitted: 1, currentAverage: 2)]
         }
         result.status.code == OK.code
-        def resultBody = new JsonSlurper().parse(result.bodyBytes)
+        def resultBody = result.rendered(JsonRender).object
         def first = resultBody.first()
         first.name == 'wind'
         first.average == 2
