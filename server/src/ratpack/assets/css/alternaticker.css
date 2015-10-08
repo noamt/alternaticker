@@ -1,0 +1,26 @@
+@font-face {
+    font-family: futuraExtended;
+    src: url(../fonts/FuturaExtended.ttf);
+}
+
+.header-text {
+    text-align: center;
+    font-family: futuraExtended;
+}
+
+.map-location {
+    width: 600px;
+    height: 400px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.numerical-stats-location {
+    padding-top: 20px;
+    text-align: center;
+}
+
+.numerical-stats-text {
+    font-family: futuraExtended;
+}

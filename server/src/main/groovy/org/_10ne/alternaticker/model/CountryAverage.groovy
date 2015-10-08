@@ -26,4 +26,9 @@ class CountryAverage {
     long getCurrentAverage() {
         return currentAverage
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        new CountryAverage(scoresSubmitted: scoresSubmitted, currentAverage: currentAverage)
+    }
 }

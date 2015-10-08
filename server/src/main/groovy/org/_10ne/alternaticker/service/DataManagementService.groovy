@@ -3,6 +3,7 @@ package org._10ne.alternaticker.service
 import groovy.util.logging.Slf4j
 import org._10ne.alternaticker.model.CountryAverage
 import org._10ne.alternaticker.model.FeedEntry
+import org._10ne.alternaticker.model.NumericalStats
 
 /**
  * @author Noam Y. Tenne
@@ -17,7 +18,7 @@ class DataManagementService {
         feedEntries.each { FeedEntry feedEntry ->
             CountryAverage countryAverage = countryAveragesCache.get(feedEntry.countryCode)
 
-            if(countryAverage ) {
+            if (countryAverage) {
                 updateExistingCountryAverage(feedEntry, countryAverage)
             } else {
                 createNewCountryAverage(feedEntry)
@@ -25,12 +26,18 @@ class DataManagementService {
         }
     }
 
-    Map<String , Long> getCountryAverages() {
-        countryAveragesCache.collectEntries { String countryCode, CountryAverage countryAverage ->
-            def entry = [:]
-            entry.put(countryCode, countryAverage.currentAverage)
-            entry
+    Map<String, CountryAverage> getCountryAverages() {
+        //Clone the cache so that the client gets an absolute snapshot
+        countryAveragesCache.clone()
+    }
+
+    NumericalStats getNumericalStats() {
+        if (countryAveragesCache.isEmpty()) {
+            return new NumericalStats(countries: 0, scoresSubmitted: 0)
         }
+        def countries = countryAveragesCache.keySet().size()
+        def scoresSubmitted = countryAveragesCache.values().sum { it.scoresSubmitted }
+        new NumericalStats(countries: countries, scoresSubmitted: scoresSubmitted)
     }
 
     private void updateExistingCountryAverage(FeedEntry feedEntry, CountryAverage countryAverage) {
