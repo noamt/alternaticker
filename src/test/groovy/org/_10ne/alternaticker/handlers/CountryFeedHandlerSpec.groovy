@@ -36,7 +36,7 @@ class CountryFeedHandlerSpec extends Specification {
         first.average == 2
 
         def last = resultBody.last()
-        first.name == 'earth'
-        first.average == 1
+        last.name == 'earth'
+        last.average == 1
     }
 }
