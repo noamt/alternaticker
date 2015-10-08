@@ -5,11 +5,9 @@ image:https://travis-ci.org/noamt/alternaticker.svg?branch=master["Build Status"
 
 AlternaTicker is built using Gradle and requires JDK 8.
 
-== Client
+== Implementation
 
-== Server
-
-.The server is currently:
+.The AlternaTicker is currently:
 * Written in Groovy.
 * Implemented using Ratpack.
 
@@ -23,6 +21,8 @@ Using the Gradle wrapper:
 
 To run the standalone server:
 
- ./gradlew :server:run
+ ./gradlew :run
 
 This will start the server and bind to Ratpack's default port +5050+.
+
+So the ticker is available at +http://localhost:5050+.
